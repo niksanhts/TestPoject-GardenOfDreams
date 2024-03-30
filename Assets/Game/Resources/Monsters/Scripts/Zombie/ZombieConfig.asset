@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea43f76c5bd282b40b7e7b8e68265351, type: 3}
+  m_Name: ZombieConfig
+  m_EditorClassIdentifier: 
+  _patrolingSpeed: 2
+  _chasingSpeed: 4
+  _maxHealth: 80
+  _attackConfig: {fileID: 11400000, guid: 684ce4da4d793c940ac73f44b081530a, type: 2}
