@@ -28,11 +28,17 @@ public class Inventory
         SlotAdded?.Invoke(newSlot);
     }
 
-    public void Removetem(Item item, int ammount) 
+    public void RemoveItem(IReadOnlySlotData slotData)
+        => RemoveItem(slotData.Name, slotData.Ammount);
+
+    public void RemoveItem(Item item, int ammount)
+        => RemoveItem(item.name, ammount);
+
+    public void RemoveItem(string name, int ammount) 
     {
         foreach (InventorySlot slot in _slots)
         {
-            if (slot.Name == item.Name)
+            if (slot.Name == name)
             {
                 slot.DecreaseAmmount(ammount);
 
@@ -50,7 +56,7 @@ public class Inventory
             }
         }
 
-        throw new Exception(nameof(item));
+        throw new Exception(nameof(name));
     }
 
     public int Count(Item item) 
@@ -64,5 +70,17 @@ public class Inventory
         }
 
         return 0;
+    }
+
+    public IEnumerable<IReadOnlySlotData> GetAllSlotsData()
+    {
+        IReadOnlySlotData[] slotDatas = new IReadOnlySlotData[_slots.Count];
+
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            slotDatas[i] = _slots[i];
+        }
+
+        return slotDatas;
     }
 }

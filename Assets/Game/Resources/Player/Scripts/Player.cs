@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Attack))]
 public class Player : MonoBehaviour
 {
+    [SerializeField] private InputHandler _inputHandler;
     [SerializeField] private PlayerConfig _playerConfig;
     [SerializeField] private HealthBar _healthBar;
 
@@ -16,23 +17,26 @@ public class Player : MonoBehaviour
     private InventoryController _inventoryController;
     private Movement _movement;
     private Health _health;
-    private Attack _attack;
+    private PlayerAttack _attack;
 
     private void Start()
     {
         _movement = GetComponent<Movement>();
         _health = GetComponent<Health>();
         _itemPicker = GetComponent<ItemPicker>();
-        _attack = GetComponent<Attack>();
+        _attack = GetComponent<PlayerAttack>();
 
-        _movement.Initialize(_playerConfig.Speed);
+        _movement.Initialize(_playerConfig.Speed, _inputHandler);
         _health.Initialize(_playerConfig.MaxHealth);
         _healthBar.Initialize(_health);
-        _attack.Initialize(_playerConfig.AttackConfig);
+
 
         _inventoryController = new InventoryController(_inventoryView);
+        _inventoryView.Initialize(_inventoryController);
         
         _itemPicker.Initialize(_inventoryController);
+        _attack.Initialize(_playerConfig.AttackConfig);
+        _attack.Initialize(_inventoryController, _inputHandler);
 
         _inventoryController.BulletAmmountChanged += UpdateBulletsCounter;
     }

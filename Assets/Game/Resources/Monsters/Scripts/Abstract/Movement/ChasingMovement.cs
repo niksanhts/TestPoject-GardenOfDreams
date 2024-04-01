@@ -19,7 +19,7 @@ public class ChasingMovement : INavMeshMovement
     public void Start()
     {
         _agent.speed = _speed;
-        _agent.Move(_target.position);
+        _agent.SetDestination(_target.position);
     }
 
     public void Stop()

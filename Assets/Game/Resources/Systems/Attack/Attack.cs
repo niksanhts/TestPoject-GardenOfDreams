@@ -22,51 +22,33 @@ public abstract class Attack : MonoBehaviour
             return;
 
         _lastAttackTime = Time.time;
-        print("atak by " + gameObject.name);
 
         PerformOverlap();
 
-        var targets = FilterTargets();
+        FilterAndCouseDamage();
 
-        if (targets.Length < 1)
-            return;
-
-        if (_config.AreaAttack)
-            foreach (var target in targets)
-                CauseDamage(target);
-        else 
-            CauseDamage(targets[0]);
-
-        
+        print("atak by " + gameObject.name + " target: ");
     }
-
-    protected virtual IDamageable ChooseTarget(IDamageable[] damageables)
-        => damageables[0];
-
-    private void CauseDamage(IDamageable damageable)
-        => damageable.TakeDamage(_config.Damage);
 
     private void PerformOverlap()
         => Physics2D.OverlapCircleNonAlloc(transform.position, _config.Radious, _targets, _config.AttackableLayers);
 
 
-    private IDamageable[] FilterTargets() 
+    private void FilterAndCouseDamage() 
     {
-        List<IDamageable> targets = new List<IDamageable>();
-        var hasObstacle = false;
-
-
-        foreach (var target in _targets) 
+        foreach (var target in _targets)
         {
-            if (target == null)
+            if (target == null || target.gameObject.TryGetComponent(out IDamageable damageable) == false)
+                continue;
+            if (Physics2D.Linecast(transform.position, target.transform.position, _config.ObstacleLayer) == false)
                 continue;
 
-            hasObstacle = Physics2D.Linecast(transform.position, target.transform.position, _config.ObstacleLayer.value);
-            if (target.TryGetComponent(out IDamageable damageable) && !hasObstacle) 
-                targets.Add(damageable);
-        }
+            damageable.TakeDamage(_config.Damage);
+            print("damage couse" + _config.Damage);
 
-        return targets.ToArray();
+            if (_config.AreaAttack == false)
+                return;
+        }
     }
 
     

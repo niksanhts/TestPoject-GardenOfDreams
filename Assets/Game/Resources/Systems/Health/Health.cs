@@ -17,6 +17,22 @@ public class Health : MonoBehaviour, IDamageable
     {
         _maxHealth = maxHealth;
         _currentHealth = _maxHealth;
+
+        try
+        {
+            _currentHealth = (float)Storage.Load(gameObject.name, "health");
+        }
+        catch
+        {
+            _currentHealth = _maxHealth;
+        }
+
+        HealthChanged?.Invoke(_currentHealth / _maxHealth);
+    }
+
+    private void OnDisable()
+    {
+        Storage.Save(gameObject.name, "health", _currentHealth);
     }
 
     public void TakeDamage(float value)
@@ -45,4 +61,5 @@ public class Health : MonoBehaviour, IDamageable
         OnDeath?.Invoke();
         HealthChanged?.Invoke(0);
     }
+
 }

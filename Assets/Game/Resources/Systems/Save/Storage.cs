@@ -6,32 +6,38 @@ using UnityEngine;
 
 public static class Storage
 {
-    public static Action<GameStateData> Loaded;
 
-    private static string _filePath = Application.persistentDataPath + "/saves/game.gsv";
 
     private static BinaryFormatter _binaryFormatter = new BinaryFormatter();
 
-    public static void Save(GameStateData stateData) 
-    {
-        
-        FileStream stream = new FileStream(_filePath, FileMode.Create);
 
-        _binaryFormatter.Serialize(stream, stateData);
+
+    public static void Save(string objName, string variableName, object data)
+    {
+        var filePath = BuildPath(objName, variableName);
+        if (Directory.Exists(filePath) == false)
+            Directory.CreateDirectory(filePath);
+        FileStream stream = new FileStream(filePath, FileMode.Create);
+        _binaryFormatter.Serialize(stream, data);
         stream.Close();
     }
 
-    public static GameStateData Load() 
-    {
-        if (File.Exists(_filePath) == false) 
-            return null;
 
-        FileStream stream = new FileStream( _filePath, FileMode.Open);
-        GameStateData stateData = (GameStateData)_binaryFormatter.Deserialize(stream);
+
+    public static object Load(string objName, string variableName)
+    {
+        var filePath = BuildPath(objName, variableName);
+        if (File.Exists(filePath) == false)
+                return null;
+        FileStream stream = new FileStream(filePath, FileMode.Open);
+        object data = _binaryFormatter.Deserialize(stream);
         stream.Close();
 
-        Loaded.Invoke(stateData);
+        return data;
+    }
 
-        return stateData;
+    private static string BuildPath(string objName, string variableName)
+    {
+        return Path.Combine(Application.persistentDataPath, "saves", objName, variableName + ".gsv");
     }
 }

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 391a4b2a2fc7248429b42a917ec6197c, type: 3}
-  m_Name: 5.45x39
+  m_Name: MIlitaryHelmet
   m_EditorClassIdentifier: 
-  _itemType: 2
-  _name: 5.45x39
-  _icon: {fileID: 21300000, guid: 0d1206390991f284daeef98c920a5d26, type: 3}
+  _itemType: 1
+  _name: MilitaryHelmet
+  _icon: {fileID: 21300000, guid: d93919417c699934ea046f7cc11b22df, type: 3}
   _prefab: {fileID: 0}

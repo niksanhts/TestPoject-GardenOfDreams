@@ -8,10 +8,13 @@ public class PlayerAttack : Attack
 
 
     private IBulletStorage _bulletStorage;
+    private InputHandler _inputHandler;
 
-    public void Initialize(IBulletStorage bulletStorage)
+    public void Initialize(IBulletStorage bulletStorage, InputHandler inputHandler)
     {
         _bulletStorage = bulletStorage;
+        _inputHandler = inputHandler;
+        _inputHandler.AttackButtonEntered += PerformAttack;
     }
 
     private void TryAttack() 
@@ -24,9 +27,6 @@ public class PlayerAttack : Attack
         PerformAttack();
     }
 
-    private void OnEnable()
-        => InputHandler.Instance.AttackButtonEntered += PerformAttack;
-
     private void OnDisable()
-        => InputHandler.Instance.AttackButtonEntered -= PerformAttack;
+        => _inputHandler.AttackButtonEntered -= PerformAttack;
 }

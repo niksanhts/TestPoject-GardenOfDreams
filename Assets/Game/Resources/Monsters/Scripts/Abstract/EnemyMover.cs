@@ -17,6 +17,9 @@ public class EnemyMover : MonoBehaviour
     public void Initialize(PlayerObserver playerObserver, float chasingSpeed, float patrolingSpeed)
     {
         _agent = GetComponent<NavMeshAgent>();
+        _agent.updateRotation = false;
+        _agent.updateUpAxis = false;
+
         _playerObserver = playerObserver;
 
         _patrolingMovement = new PatrolingMovement();
@@ -29,6 +32,11 @@ public class EnemyMover : MonoBehaviour
 
         _movement = _patrolingMovement;
         _movement.Start();
+
+        var position = Load();
+
+        if (position != null)
+            transform.position = position;
 
         Inited = true;
     }
@@ -55,8 +63,24 @@ public class EnemyMover : MonoBehaviour
 
         _movement.Stop();
         _movement = playerIsNear ? _chasingMovement : _patrolingMovement;
-        _patrolingMovement.Start();
+        _movement.Start();
     }
 
+    private void Save()
+    {
+        MyVector3 position = new MyVector3(
+
+            transform.position.x,
+            transform.position.y,
+            transform.position.z
+        );
+        Storage.Save(gameObject.name, "position", position);
+    }
+
+    private Vector3 Load()
+    {
+        MyVector3 loadPosition = (MyVector3)Storage.Load(gameObject.name, "position");
+        return new Vector3(loadPosition.X, loadPosition.Y, loadPosition.Z);
+    }
 
 }

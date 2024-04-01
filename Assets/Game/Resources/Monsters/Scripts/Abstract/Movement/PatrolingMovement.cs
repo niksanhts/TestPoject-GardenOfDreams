@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public class PatrolingMovement : INavMeshMovement
 {
 
-    private float _positionOffset = 10f;
+    private float _positionOffset = 3f;
     private NavMeshAgent _agent;
     private float _speed;
     private Vector3 _target;
@@ -22,7 +22,7 @@ public class PatrolingMovement : INavMeshMovement
     {
         _agent.speed = _speed;
         FindTarget();
-        _agent.Move(_target);
+        _agent.SetDestination(_target);
     }
 
     public void Stop()
@@ -34,12 +34,14 @@ public class PatrolingMovement : INavMeshMovement
     {
         if (Vector3.Magnitude(_transform.position - _target) > _targetOffset) 
             FindTarget();
-        _agent.Move(_target);
     }
 
     private void FindTarget()
-        => _target = Utilits.FindRandomPositionXY(_transform.position.x - _positionOffset,
-            _transform.position.x + _positionOffset,
-            _transform.position.y - _positionOffset,
-            _transform.position.y + _positionOffset);
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * _positionOffset + _transform.position;
+        NavMesh.SamplePosition(_target, out NavMeshHit hit, _positionOffset, NavMesh.AllAreas);
+        _target = hit.position;
+
+        _agent.SetDestination(_target);
+    } 
 }
