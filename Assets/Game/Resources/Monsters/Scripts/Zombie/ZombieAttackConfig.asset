@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rate: 0.3
   _damage: 16
-  _radius: 1
+  _radius: 2.6
   _attackableLayers:
     serializedVersion: 2
     m_Bits: 8
   _obstacleLayers:
     serializedVersion: 2
     m_Bits: 128
-  _areaAttack: 1
+  _areaAttack: 0

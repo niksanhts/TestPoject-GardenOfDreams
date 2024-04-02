@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
     [SerializeField] private InputHandler _inputHandler;
     [SerializeField] private PlayerConfig _playerConfig;
     [SerializeField] private HealthBar _healthBar;
-
     [SerializeField] private InventoryView _inventoryView;
     [SerializeField] private BulletsCounter _bulletsCounter;
 
@@ -21,6 +20,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        _inventoryController = new InventoryController(_inventoryView);
+
         _movement = GetComponent<Movement>();
         _health = GetComponent<Health>();
         _itemPicker = GetComponent<ItemPicker>();
@@ -29,15 +30,12 @@ public class Player : MonoBehaviour
         _movement.Initialize(_playerConfig.Speed, _inputHandler);
         _health.Initialize(_playerConfig.MaxHealth);
         _healthBar.Initialize(_health);
-
-
-        _inventoryController = new InventoryController(_inventoryView);
         _inventoryView.Initialize(_inventoryController);
-        
         _itemPicker.Initialize(_inventoryController);
         _attack.Initialize(_playerConfig.AttackConfig);
         _attack.Initialize(_inventoryController, _inputHandler);
 
+        _bulletsCounter.ChangeAmmount(_inventoryController.CountByType(ItemType.Bullet));
         _inventoryController.BulletAmmountChanged += UpdateBulletsCounter;
     }
 

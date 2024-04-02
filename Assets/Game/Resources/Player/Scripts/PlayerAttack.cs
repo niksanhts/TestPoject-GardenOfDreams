@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttack : Attack
@@ -14,7 +12,13 @@ public class PlayerAttack : Attack
     {
         _bulletStorage = bulletStorage;
         _inputHandler = inputHandler;
-        _inputHandler.AttackButtonEntered += PerformAttack;
+        _inputHandler.AttackButtonEntered += TryAttack;
+    }
+
+    protected override void OnAttackPerformed()
+    {
+        base.OnAttackPerformed();
+        _bulletStorage.TakeBullet(_bulletItem);
     }
 
     private void TryAttack() 
@@ -28,5 +32,5 @@ public class PlayerAttack : Attack
     }
 
     private void OnDisable()
-        => _inputHandler.AttackButtonEntered -= PerformAttack;
+        => _inputHandler.AttackButtonEntered -= TryAttack;
 }

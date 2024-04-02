@@ -1,6 +1,7 @@
 
 using System;
 
+
 public class InventoryController : IBulletStorage, IItemRemover
 {
     public Action<IReadOnlySlotData> BulletAmmountChanged;
@@ -10,40 +11,28 @@ public class InventoryController : IBulletStorage, IItemRemover
 
     public InventoryController(InventoryView view) 
     {
-
-        try
-        {
-            _inventoryModel = (Inventory)Storage.Load("Player", "inventory");
-        }
-        catch
-        {
-            _inventoryModel = new Inventory();
-        }
-
-        if (_inventoryModel == null)
-        {
-            _inventoryModel = new Inventory();
-        }
+        _inventoryModel = new Inventory();
 
         _inventoryView = view;
         _inventoryView.AddSlots(_inventoryModel.GetAllSlotsData());
 
-        _inventoryModel.SlotAdded += OnSlotAdded;
-        _inventoryModel.SlotRemoved += OnSlotRamoved;
+        _inventoryModel.SlotCreated += OnSlotAdded;
+        _inventoryModel.SlotRemoved += OnSlotRemoved;
         _inventoryModel.SlotAmmountUpdated += OnSlotAmmountUpdated;
     }
 
     ~InventoryController() 
     {
-        Storage.Save("Player", "inventory", _inventoryModel);
-
-        _inventoryModel.SlotAdded -= OnSlotAdded;
-        _inventoryModel.SlotRemoved -= OnSlotRamoved;
+        _inventoryModel.SlotCreated -= OnSlotAdded;
+        _inventoryModel.SlotRemoved -= OnSlotRemoved;
         _inventoryModel.SlotAmmountUpdated -= OnSlotAmmountUpdated;
     }
 
+    public int CountByType(ItemType type)
+        => _inventoryModel.CountByType(type);
+
     public int CountBullets(Item bullets)
-    => Count(bullets);
+        => Count(bullets);
 
     public void TakeBullet(Item bullet)
         => RemoveItem(bullet, 1);
@@ -71,7 +60,7 @@ public class InventoryController : IBulletStorage, IItemRemover
         _inventoryView.AddSlot(slotData);
     }
 
-    private void OnSlotRamoved(IReadOnlySlotData slotData)
+    private void OnSlotRemoved(IReadOnlySlotData slotData)
     {
         if (slotData.Type == ItemType.Bullet)
             BulletAmmountChanged?.Invoke(slotData);

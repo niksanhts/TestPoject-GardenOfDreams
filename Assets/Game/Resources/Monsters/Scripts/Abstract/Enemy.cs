@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Attack))]
-[RequireComponent(typeof(PlayerObserver))]
+[RequireComponent(typeof(EnemyStateController))]
 
 public abstract class Enemy : MonoBehaviour
 {
@@ -11,21 +11,17 @@ public abstract class Enemy : MonoBehaviour
 
     private Health _health;
     private Attack _attack;
-    private PlayerObserver _playerObserver;
-    private EnemyMover _enemyMover;
+    private EnemyStateController _stateController;
 
     private void Start()
     {
         _health = GetComponent<Health>();
         _attack = GetComponent<Attack>();
-        _playerObserver = GetComponent<PlayerObserver>();
-        _enemyMover = GetComponent<EnemyMover>();
+        _stateController = GetComponent<EnemyStateController>();
 
         _health.Initialize(_config.MaxHealth);
-        _attack.Initialize(_config.AttackConfig, _playerObserver);
-        _enemyMover.Initialize(_playerObserver, _config.ChasingSpeed, _config.PatrolingSpeed);
+        _attack.Initialize(_config.AttackConfig);
         _healthBar.Initialize(_health);
-        
-        
+        _stateController.Initialize(_config.ChasingSpeed, _config.PatrolingSpeed);
     }
 }

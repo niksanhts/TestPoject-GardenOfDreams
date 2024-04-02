@@ -6,6 +6,7 @@ public class Health : MonoBehaviour, IDamageable
 {
     public Action<float> HealthChanged;
 
+    [SerializeField] private bool _save;
     [SerializeField] private UnityEvent TakedDamage;
     [SerializeField] private UnityEvent OnDeath;
 
@@ -18,21 +19,28 @@ public class Health : MonoBehaviour, IDamageable
         _maxHealth = maxHealth;
         _currentHealth = _maxHealth;
 
-        try
+        if (_save)
         {
-            _currentHealth = (float)Storage.Load(gameObject.name, "health");
+            try
+            {
+                //_currentHealth = (float)Storage.Load(gameObject.name, "health");
+            }
+            catch
+            {
+                _currentHealth = _maxHealth;
+            }
         }
-        catch
-        {
+
+        if (_currentHealth == 0)
             _currentHealth = _maxHealth;
-        }
 
         HealthChanged?.Invoke(_currentHealth / _maxHealth);
     }
 
     private void OnDisable()
     {
-        Storage.Save(gameObject.name, "health", _currentHealth);
+        //if (_save)
+        //    Storage.Save(gameObject.name, "health", _currentHealth);
     }
 
     public void TakeDamage(float value)

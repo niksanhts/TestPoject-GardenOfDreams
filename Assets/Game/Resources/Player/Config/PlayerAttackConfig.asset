@@ -20,5 +20,5 @@ MonoBehaviour:
     m_Bits: 64
   _obstacleLayers:
     serializedVersion: 2
-    m_Bits: 128
-  _areaAttack: 1
+    m_Bits: 0
+  _areaAttack: 0

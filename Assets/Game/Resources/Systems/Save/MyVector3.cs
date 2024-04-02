@@ -1,4 +1,6 @@
+using System;
 
+[Serializable]
 public class MyVector3
 {
     public float X { get; private set; }

@@ -2,40 +2,49 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public struct InventorySlot : IReadOnlySlotData
+public class InventorySlot : IReadOnlySlotData
 {
-    public Sprite Icon => _item.Icon;
-    public string Name => _item.Name;
-    public int Ammount => _ammount;
-    public bool Empty => _ammount == 0;
-    public ItemType Type => _item.Type;
+    public string SpriteName { get; private set; }
+    public string Name { get; private set; }
+    public int Ammount { get; private set; }
+    public bool Empty => Ammount == 0;
+    public ItemType Type { get; private set; }
 
-    private Item _item;
-    private int _ammount;
+
 
     public InventorySlot(Item item, int ammount)
     {
-        _item = item;
-        _ammount = ammount;
+        SpriteName = item.Icon.name;
+        Name = item.Name;
+        Type = item.Type;
+        Ammount = ammount;
     }
 
     public void IncreaseAmmount(int value) 
     {
-        if (value < 1) 
-            throw new System.ArgumentOutOfRangeException(nameof(value));
+        if (value < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value));
+        }
 
-        _ammount += value;
+        var newAmmount = Ammount + value;
+        Ammount = newAmmount;
     }
 
     public void DecreaseAmmount(int value)
     {
-        if (value < 1)
-            throw new System.ArgumentOutOfRangeException(nameof(value));
+        if (value < 1) 
+        {
+            throw new ArgumentOutOfRangeException(nameof(value));
+        } 
 
-        if(_ammount - value <= 0)
-            _ammount = 0;
+        if (Ammount - value <= 0)
+        {
+            Ammount = 0;
+            return;
+        }
 
-        _ammount -= value;
+        Ammount -= value;
     }
 
 }

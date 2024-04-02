@@ -1,18 +1,21 @@
+using UnityEngine;
+
 public class EnemyAttack : Attack
 {
-    private PlayerObserver _playerObserver;
+    private float _attackRange;
+    private Transform _playerTarnsform;
 
-    public override void Initialize(AttackConfig config, PlayerObserver playerObserver)
+    public override void Initialize(AttackConfig config)
     {
         base.Initialize(config);
-
-        _playerObserver = playerObserver;
-        _playerObserver.PlayerIsInSecondRadius += PerformAttack;
+        _attackRange = config.Radious;
+        _playerTarnsform = FindAnyObjectByType<Player>().transform;
     }
 
-    private void OnDisable()
+    private void Update()
     {
-        _playerObserver.PlayerIsInSecondRadius -= PerformAttack;
+        if (Vector3.Distance(_playerTarnsform.position, transform.position) <= _attackRange) 
+            PerformAttack();
     }
 
 

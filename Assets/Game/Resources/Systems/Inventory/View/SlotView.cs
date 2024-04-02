@@ -9,16 +9,17 @@ public class SlotView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _ammount;
     [SerializeField] private Button _removeButton;
 
+    protected int _ammountInt;
+
     private IItemRemover _itemRemover;
 
     public void Initialize(IReadOnlySlotData slot, IItemRemover itemRemover)
     {
-        _icon.sprite = slot.Icon;
+        _icon.sprite = SpriteList.Instance.GetSprite(slot.SpriteName);
         _name.text = slot.Name;
         SetAmmount(slot.Ammount);
 
         _itemRemover = itemRemover;
-        _removeButton.onClick.AddListener(RemoveItem);
     }
 
     public void SetAmmount(int ammount) 
@@ -26,15 +27,18 @@ public class SlotView : MonoBehaviour
         if (ammount < 1)
             throw new System.Exception(nameof(ammount));
 
-        if (ammount == 1)
+        _ammountInt = ammount;
+
+        if (_ammountInt == 0)
             _ammount.text = "";
         else
-            _ammount.text = ammount.ToString();
+            _ammount.text = _ammountInt.ToString();
     }
 
     private void OnEnable()
     {
         _removeButton.gameObject.SetActive(false);
+        _removeButton.onClick.AddListener(RemoveItem);
     }
 
     private void OnDisable()
@@ -44,6 +48,6 @@ public class SlotView : MonoBehaviour
 
     private void RemoveItem()
     {
-        _itemRemover.RemoveItem(_name.text, int.Parse(_ammount.text));
+        _itemRemover.RemoveItem(_name.text, _ammountInt);
     }
 }

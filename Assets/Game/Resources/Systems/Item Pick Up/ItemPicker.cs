@@ -10,6 +10,9 @@ public class ItemPicker : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (_inventoryController == null)
+            print("nuuuuuullll") ;
+
         if (collision.gameObject.TryGetComponent(out PhysicalItem item))
             _inventoryController.AddItem(item.PickUp(), item.Ammount);
     }
