@@ -11,8 +11,8 @@ public static class Storage
     {
         var filePath = BuildPath(objName, variableName);
 
-        //if (Directory.Exists(filePath) == false)
-        //    Directory.CreateDirectory(filePath);
+        if (Directory.Exists(filePath) == false)
+            Directory.CreateDirectory(filePath);
 
         FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate);
        

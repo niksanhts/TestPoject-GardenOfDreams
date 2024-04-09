@@ -29,7 +29,7 @@ public class SlotView : MonoBehaviour
 
         _ammountInt = ammount;
 
-        if (_ammountInt == 0)
+        if (_ammountInt == 1)
             _ammount.text = "";
         else
             _ammount.text = _ammountInt.ToString();
